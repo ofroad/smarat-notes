@@ -1,0 +1,45 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/edit/edit",
+	"pages/my/my",
+	"pages/my/categ",
+	"pages/my/list",
+	"pages/my/list/view"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "小笔记",
+    "navigationBarTextStyle":"black"
+  },
+  "tabBar": {
+		"color": "#dddddd",
+		"selectedColor": "#3cc51f",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+			"pagePath": "pages/index/index",
+			"iconPath": "images/home.png",
+			"selectedIconPath": "images/homeHL.png",
+			"text": "首页"
+		},{
+			"pagePath": "pages/edit/edit",
+			"iconPath": "images/note.png",
+			"selectedIconPath": "images/noteHL.png",
+			"text": "写笔记"
+		},{
+			"pagePath": "pages/my/my",
+			"iconPath": "images/mine.png",
+			"selectedIconPath": "images/mineHL.png",
+			"text": "我的"
+		}]
+	},
+	"networkTimeout": {
+		"request": 10000,
+		"connectSocket": 10000,
+		"uploadFile": 10000,
+		"downloadFile": 10000
+	},
+	"debug": true
+}
