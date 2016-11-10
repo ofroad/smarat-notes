@@ -7,20 +7,52 @@ Page({
     userInfo: {}
   },
   //事件处理函数
-  bindViewTap: function() {
+  createNote: function() {
     wx.navigateTo({
-      url: '../logs/logs'
+      url: '../edit/edit?type=create'
     })
   },
-  onLoad: function () {
-    console.log('onLoad')
-    var that = this
-    //调用应用实例的方法获取全局数据
-    app.getUserInfo(function(userInfo){
-      //更新数据
-      that.setData({
-        userInfo:userInfo
+  onLoad:function(){//一个页面只会调用一次。
+	  console.log('onLoad');
+  },
+  onReady:function(){//一个页面只会调用一次，代表页面已经准备妥当，可以和视图层进行交互。
+	  console.log('onReady');
+  },
+  onShow: function () {//每次打开页面都会调用一次，这样从别的页面到达这个页面都可以看到最新的数据
+    console.log('onShow');
+    this.ref = app.getTodoRef()
+    this.ref.on('value',function(snapshot,prKey){
+      var key = snapshot.key()
+      var text = snapshot.val()
+      //var newItem = {key:key,text:text}
+      //this.data.todos.push(newItem)
+     // this.setData({
+      //  todos:this.data.todos
+     // })
+	 console.log(snapshot.exists());//判断此节点下有无数据
+	 //console.log(prKey);
+	 console.log(key);
+	 console.log(text);
+	 
+    },this);
+    this.ref.on('child_removed',function(snapshot){
+      //var key = snapshot.key()
+	  /*
+      var index = this.data.todos.findIndex(function(item,index){
+        if(item.key == key ){
+          return true
+        }
+        return false
       })
-    })
+      if(index>=0){
+        this.data.todos.splice(index,1)
+        this.setData({
+          todos:this.data.todos
+        })
+      }
+	  */
+	  
+    },this);
+	
   }
 })

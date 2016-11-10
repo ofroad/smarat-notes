@@ -1,11 +1,18 @@
+var wilddog = require('wilddog-weapp-all');
 //app.js
 App({
   onLaunch: function () {
-    var config = {
-      syncURL: 'https://vue-001.wilddogio.com/'
-    };
-    wilddog.initializeApp(config);
-    this.ref = wilddog.sync().ref();
+	var that = this;
+	this.getUserInfo(
+		function(userInfo){
+			var config = {
+			  syncURL: 'https://vue-001.wilddogio.com'
+			}
+			wilddog.initializeApp(config)
+			that.ref = wilddog.sync().ref("/users/"+userInfo.nickName) 
+		}
+	); 
+
   },
   getUserInfo:function(cb){
     var that = this
@@ -28,8 +35,9 @@ App({
   addItem:function(text){
     this.ref.push(text)
   },
-  getTodoRef:function(path){
-    return this.ref(path);
+  getTodoRef:function(){
+	console.log("414123");
+    return this.ref
   },
   globalData:{
     userInfo:null
