@@ -21,7 +21,7 @@ Page({
   onShow: function () {//每次打开页面都会调用一次，这样从别的页面到达这个页面都可以看到最新的数据
     console.log('onShow');
     this.ref = app.getTodoRef()
-    this.ref.on('value',function(snapshot,prKey){
+    this.ref.child("notes-list").orderByKey().on('value',function(snapshot,prKey){
       var key = snapshot.key()
       var text = snapshot.val()
       //var newItem = {key:key,text:text}
@@ -33,6 +33,22 @@ Page({
 	 //console.log(prKey);
 	 console.log(key);
 	 console.log(text);
+	 var kt=["历史","文学","油画","工作"],acrs=[],zn=0;
+	 
+	 
+	 for(var i=0;i<kt.length;i++){
+		 snapshot.forEach(function(data){
+			
+			 if(data.val().type===kt[i]){
+				 console.log(data.val());
+				 zn++;
+			 }
+	     });
+		 acrs.push(kt[i]+"-"+zn);
+		 //acrs.push({kt[i]:zn});
+	     zn=0
+	 }
+	 console.log(acrs);//将所有数据按分类进行统计
 	 
     },this);
     this.ref.on('child_removed',function(snapshot){

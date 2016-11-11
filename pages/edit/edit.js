@@ -39,7 +39,7 @@ Page({
   onShow:function(){
 	  console.log('onShow');
 	  console.log(new Date());
-	  
+	    var that=this;
 	    this.ref = app.getTodoRef();
 		this.ref.child("notes-type").on('value',function(snapshot,prKey){
 		  var key = snapshot.key()
@@ -49,13 +49,21 @@ Page({
 		 //console.log(prKey);
 		 console.log(key);
 		 console.log(text);
+		 //因为每次显示页面都要拉取数据，不清空数据会重复累积
+		 that.data.types=[];
+		 
+		 snapshot.forEach(function(data){
+			 console.log(data.key());
+			 console.log(data.val());
+			 that.data.types.push(data.val());
+		 });
 		 if(!snapshot.exists()){
 			 //没有分类，开始创建分类
 			 console.log("没有分类数据");
 		 }else{
 			 //有分类，写入data
 			 console.log("有分类数据");
-			  this.data.types.push(text)
+			  
 			  this.setData({
 				types:this.data.types,
 				hastypes:true
@@ -93,10 +101,18 @@ Page({
   },
   formSubmit: function(e) {
     console.log('form发生了submit事件，携带数据为：', e.detail.value);
-	var time_now=Date.now(),key=time_now+"",time_update;
-	this.ref.child("notes-type").push(e.detail.value.type);
+	var time_now=Date.now(),key=time_now+"",time_update,notes_type;
+	if(this.data.hastypes){
+		//有分类数据，从data中读取
+		notes_type=this.data.types[e.detail.value.type];
+	}else{
+		//没有分类，从输入框中读取并push到后台
+		notes_type=e.detail.value.type;
+		this.ref.child("notes-type").push(e.detail.value.type);
+	}
+	//提交数据
 	this.ref.child("notes-list").child(key).set({
-		"type":e.detail.value.type,
+		"type":notes_type,
 		"author":app.globalData.userInfo.nickName,
 		"time-update":util.formatTime(new Date(time_now)),
 		"title":e.detail.value.title,

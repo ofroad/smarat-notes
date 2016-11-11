@@ -7,4 +7,17 @@
   <view class="usermotto">
     <text class="user-motto">{{motto}}</text>
   </view>
+  <view>
+    <text>所有的分类</text>
+  </view>
+  <view wx:for="{{types}}" wx:for-index="idx" wx:for-item="itemName">
+  {{itemName}}
+  </view>
+  <form bindsubmit="formSubmit">
+	  <view class="section">
+		  <label>新建分类：</label>
+		  <input name="type" style="border:1px solid #ff0000;" placeholder="新建分类" auto-focus />
+	  </view>
+	  <button formType="submit">提交</button>
+  </form>
 </view>
