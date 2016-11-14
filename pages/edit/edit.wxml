@@ -26,11 +26,11 @@
 	  </block>
 	  <view class="section">
 		  <label>标题：</label>
-		  <input name="title" style="border:1px solid #ff0000;" placeholder="标题" auto-focus />
+		  <input value="{{edit_title}}" name="title" style="border:1px solid #ff0000;" placeholder="标题" auto-focus />
 	  </view>
 	  <view class="section">
 		  <label>内容：</label>
-		  <textarea name="contents" style="border:1px solid #ff0000;" placeholder="内容" auto-focus />
+		  <textarea value="{{edit_contents}}" name="contents" style="border:1px solid #ff0000;" placeholder="内容" auto-focus />
 	  </view>
 	  <button formType="submit">提交</button>
   </form>

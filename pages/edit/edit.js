@@ -9,7 +9,11 @@ Page({
 	type:"create",
 	types: [],
     index: 0,
-	hastypes:false
+	hastypes:false,
+	edit_key:"",
+	edit_title:"",
+	edit_contents:"",
+	edit_notetype:""
   },
   //事件处理函数
   bindViewTap: function() {
@@ -29,12 +33,28 @@ Page({
 	
     var that = this
     //调用应用实例的属性获取全局数据
-	 that.setData({
-        userInfo:app.globalData.userInfo,
-		type:data.type
-     });
+	if(data.type==="create"||data.type===undefined){
+		that.setData({
+			userInfo:app.globalData.userInfo,
+			type:data.type
+		 });
+	}else if(data.type="edit"){
+		that.setData({
+			userInfo:app.globalData.userInfo,
+			type:data.type,
+			edit_key:data.key,
+			edit_title:data.title,
+			edit_contents:data.contents,
+			edit_notetype:data.notetype
+		 });
+	}
+	 
 	  
 	console.log(this.data.type);
+	console.log(this.data.edit_key);
+	console.log(this.data.edit_title);
+	console.log(this.data.edit_contents);
+	console.log(this.data.edit_notetype);
   },
   onShow:function(){
 	  console.log('onShow');
@@ -57,6 +77,7 @@ Page({
 			 console.log(data.val());
 			 that.data.types.push(data.val());
 		 });
+		 
 		 if(!snapshot.exists()){
 			 //没有分类，开始创建分类
 			 console.log("没有分类数据");
@@ -79,8 +100,15 @@ Page({
 		  console.log("准备新建一个笔记--undefined");
 	  }else if(type==="edit"){
 		  console.log("准备编辑已有的笔记");
-		  this.getNoteInfo();
+		  this.data.index=that.data.types.findIndex(function(val){
+			  return val===that.data.edit_notetype;
+		  });
+		  this.setData({
+			  index:this.data.index
+		  });
+		  
 	  }
+	  console.log(this.data.index);
   },
   onReady:function(){
 	  console.log('onReady');
@@ -110,27 +138,63 @@ Page({
 		notes_type=e.detail.value.type;
 		this.ref.child("notes-type").push(e.detail.value.type);
 	}
-	//提交数据
-	this.ref.child("notes-list").child(key).set({
-		"type":notes_type,
-		"author":app.globalData.userInfo.nickName,
-		"time-update":util.formatTime(new Date(time_now)),
-		"title":e.detail.value.title,
-		"contents":e.detail.value.contents
-	}).then(function(){
-		wx.showToast({
-		  title: '提交成功',
-		  icon: 'success',
-		  duration: 2000,
-		  success:function(){
-			  wx.navigateTo({
-				  url: '../index/index'
-			  })
-		  }
+	
+	var type=this.data.type;
+	if(type==="create"||type===undefined){
+		  console.log("提交新建一个笔记--create");
+		  //提交数据--新建
+		this.ref.child("notes-list").push({
+			"type":notes_type,
+			"author":app.globalData.userInfo.nickName,
+			"timeUpdate":util.formatTime(new Date(time_now)),
+			"title":e.detail.value.title,
+			"contents":e.detail.value.contents
+		}).then(function(){
+			wx.showToast({
+			  title: '提交成功',
+			  icon: 'success',
+			  duration: 5000,
+			  success:function(){
+				  setTimeout(function(){
+					  wx.navigateTo({
+						  url: '../index/index'
+					  });
+				  },5000);
+				  
+			  }
+			})
 		})
-	})
-	.catch(function(err){
-        console.info('set data failed', err.code, err);
-    });
+		.catch(function(err){
+			console.info('set data failed', err.code, err);
+		});
+	}else if(type==="edit"){
+		  console.log("提交编辑已有的笔记");
+		  //提交数据--更新
+		this.ref.child("notes-list").child(this.data.edit_key).set({
+			"type":notes_type,
+			"author":app.globalData.userInfo.nickName,
+			"timeUpdate":util.formatTime(new Date(time_now)),
+			"title":e.detail.value.title,
+			"contents":e.detail.value.contents
+		}).then(function(){
+			wx.showToast({
+			  title: '提交成功',
+			  icon: 'success',
+			  duration: 5000,
+			  success:function(){
+				  setTimeout(function(){
+					  wx.navigateTo({
+						  url: '../index/index'
+					  });
+				  },5000);
+				  
+			  }
+			})
+		})
+		.catch(function(err){
+			console.info('set data failed', err.code, err);
+		});
+	}
+	
   }
 })

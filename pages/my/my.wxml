@@ -8,7 +8,14 @@
     <text class="user-motto">{{motto}}</text>
   </view>
   <view>
-    <text>所有的分类</text>
+    <text>分类统计</text>
+  </view>
+  <view bindtap="viewList" data-type="{{itemName.key}}" wx:for="{{types_total}}" wx:for-index="idx" wx:for-item="itemName">
+  {{itemName.key}}({{itemName.val}})
+  </view>
+  
+  <view>
+    <text>分类管理</text>
   </view>
   <view wx:for="{{types}}" wx:for-index="idx" wx:for-item="itemName">
   {{itemName}}

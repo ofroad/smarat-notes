@@ -1,5 +1,6 @@
 <!--index.wxml-->
 <view class="container">
+	<!--
   <view  bindtap="bindViewTap" class="userinfo">
     <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
     <text class="userinfo-nickname">{{userInfo.nickName}}</text>
@@ -7,4 +8,13 @@
   <view class="usermotto">
     <text class="user-motto">{{motto}}</text>
   </view>
+  -->
+  <view>
+	<view>{{notes_detail.title}}</view><view>{{notes_detail.timeUpdate}}</view>
+	<view>{{notes_detail.type}}</view>
+	<view>{{notes_detail.contents}}</view>
+  </view>
+  
+   <button bindtap="modifyNote">修改此条笔记</button>
+   <button bindtap="deleteNote">删除此条笔记</button>
 </view>

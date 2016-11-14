@@ -8,7 +8,7 @@ App({
 			var config = {
 			  syncURL: 'https://vue-001.wilddogio.com'
 			}
-			wilddog.initializeApp(config)
+			that.wilddog=wilddog.initializeApp(config)
 			that.ref = wilddog.sync().ref("/users/"+userInfo.nickName) 
 		}
 	); 
@@ -38,6 +38,10 @@ App({
   getTodoRef:function(){
 	console.log("414123");
     return this.ref
+  },
+  getwilddog:function(){
+	//console.log("414123");
+    return this.wilddog
   },
   globalData:{
     userInfo:null

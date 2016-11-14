@@ -19,3 +19,4 @@
 .usermotto {
   margin-top: 200px;
 }
+.new-list{width:100%; margin:10px 0; border-bottom:1px solid #ccc; text-align:left;}

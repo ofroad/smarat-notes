@@ -1,5 +1,6 @@
 <!--index.wxml-->
 <view class="container">
+	<!--
   <view  bindtap="bindViewTap" class="userinfo">
     <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
     <text class="userinfo-nickname">{{userInfo.nickName}}</text>
@@ -7,4 +8,10 @@
   <view class="usermotto">
     <text class="user-motto">{{motto}}</text>
   </view>
+  -->
+  
+  <view class="new-list" bindtap="viewDetail" wx:for="{{type_lsit}}" wx:for-index="idx" wx:for-item="itemName" data-key="{{itemName.key}}">
+  {{itemName.text.title}}
+  </view>
+  
 </view>

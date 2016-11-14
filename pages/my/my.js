@@ -5,13 +5,15 @@ Page({
   data: {
     motto: 'Hello World',
     userInfo: {},
-	types: []
+	types: [],
+	types_total:[]
   },
   //事件处理函数
-  bindViewTap: function() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
+  viewList:function(e){
+	  console.log(e);
+	  wx.navigateTo({
+		  url: 'list/list?type='+e.target.dataset.type
+	  })
   },
   onLoad: function () {
     console.log('onLoad')
@@ -26,7 +28,11 @@ Page({
 	  console.log(new Date());
 	    var that=this;
 	    this.ref = app.getTodoRef();
-		this.ref.child("notes-type").on('value',function(snapshot,prKey){
+		
+		
+		
+		//分类管理相关
+		this.ref.child("notes-type").on('value',function(snapshot,prKey){console.log("k2");
 		  var key = snapshot.key()
 		  var text = snapshot.val()
 
@@ -53,6 +59,47 @@ Page({
 				types:this.data.types
 			  })
 		 }
+		 
+		},this);
+		
+		
+		//分类统计相关
+		this.ref.child("notes-list").orderByKey().on('value',function(snapshot,prKey){console.log("k1");
+		  var key = snapshot.key()
+		  var text = snapshot.val()
+		  //var newItem = {key:key,text:text}
+		  //this.data.todos.push(newItem)
+		 // this.setData({
+		  //  todos:this.data.todos
+		 // })
+		 console.log(snapshot.exists());//判断此节点下有无数据
+		 //console.log(prKey);
+		 console.log(key);
+		 console.log(text);
+		 console.log(this.data.types);
+		 var kt=this.data.types,acrs=[],zn=0;
+		 
+		 this.data.types_total=[];
+		 for(var i=0;i<kt.length;i++){
+			 snapshot.forEach(function(data){
+				
+				 if(data.val().type===kt[i]){
+					 console.log(data.val());
+					 zn++;
+				 }
+			 });
+			 this.data.types_total.push({
+				 key:kt[i],
+				 val:zn
+			 });
+			 //acrs.push({kt[i]:zn});
+			 zn=0;
+		 }
+		 console.log(this.data.types_total);//将所有数据按分类进行统计
+		 this.setData({
+			types_total: this.data.types_total
+		 });
+		 
 		 
 		},this);
 	

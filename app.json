@@ -3,9 +3,9 @@
     "pages/index/index",
     "pages/edit/edit",
 	"pages/my/my",
-	"pages/my/categ",
-	"pages/my/list",
-	"pages/my/list/view"
+	"pages/my/categ/categ",
+	"pages/my/list/list",
+	"pages/my/list/view/view"
   ],
   "window":{
     "backgroundTextStyle":"light",
