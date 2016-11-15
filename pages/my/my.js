@@ -106,7 +106,7 @@ Page({
 	    
 		//初始化提交标记
 	    this.setData({
-			submit_disabled:!this.data.submit_disabled
+			submit_disabled:false
 		});
 	 
   },
@@ -129,6 +129,7 @@ Page({
 	//that.data.types.push(notes_type);
 	console.log(notes_type.trim());
 	console.log(notes_type.trim().length);
+	
 	if(notes_type.trim().length<=0){
 		wx.showToast({
 		  title: '请输入分类',
@@ -143,6 +144,27 @@ Page({
 		});
 		return;
 	}
+	var k=this.data.types.findIndex(function(x){
+		return x===notes_type.trim();
+	});
+	console.log(k);
+	if(k>-1){
+		wx.showToast({
+		  title: '该分类已经存在',
+		  icon: 'success',
+		  duration: 2000,
+		  success:function(){
+			 
+		  }
+		});
+		this.setData({
+			submit_disabled:!this.data.submit_disabled
+		});
+		return;
+	}
+	
+	
+	
 	this.ref.child("notes-type").push(notes_type.trim())
 	.then(function(){
 		wx.showToast({
