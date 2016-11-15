@@ -13,7 +13,8 @@ Page({
 	edit_key:"",
 	edit_title:"",
 	edit_contents:"",
-	edit_notetype:""
+	edit_notetype:"",
+	submit_disabled:false
   },
   //事件处理函数
   bindViewTap: function() {
@@ -129,40 +130,62 @@ Page({
   },
   formSubmit: function(e) {
     console.log('form发生了submit事件，携带数据为：', e.detail.value);
+	//阻止多次快速重复点击提交
+	if(this.data.submit_disabled){
+		console.log("多次快速重复点击提交");
+		return;
+	}
+	this.data.submit_disabled=true;
+	this.setData({
+		submit_disabled:this.data.submit_disabled
+	});
+	
 	var time_now=Date.now(),key=time_now+"",time_update,notes_type;
 	if(this.data.hastypes){
 		//有分类数据，从data中读取
-		notes_type=this.data.types[e.detail.value.type];
+		notes_type=this.data.types[e.detail.value.type].trim();
 	}else{
-		//没有分类，从输入框中读取并push到后台
-		notes_type=e.detail.value.type;
-		this.ref.child("notes-type").push(e.detail.value.type);
+		//没有分类，从输入框中读取push到后台
+		notes_type=e.detail.value.type.trim();
+		this.ref.child("notes-type").push(notes_type);
 	}
 	
 	var type=this.data.type;
+	
+	if(!this.checkFrom(e,type)){
+		console.log("数据检查不通过");
+		return;
+	}
+	console.log("数据检查通过");
+	console.log(this.data.submit_disabled);
+	
 	if(type==="create"||type===undefined){
 		  console.log("提交新建一个笔记--create");
+		  
 		  //提交数据--新建
 		this.ref.child("notes-list").push({
 			"type":notes_type,
 			"author":app.globalData.userInfo.nickName,
 			"timeUpdate":util.formatTime(new Date(time_now)),
-			"title":e.detail.value.title,
-			"contents":e.detail.value.contents
+			"title":e.detail.value.title.trim(),
+			"contents":e.detail.value.contents.trim()
 		}).then(function(){
 			wx.showToast({
 			  title: '提交成功',
 			  icon: 'success',
-			  duration: 5000,
+			  duration: 500,
 			  success:function(){
-				  setTimeout(function(){
-					  wx.navigateTo({
-						  url: '../index/index'
-					  });
-				  },5000);
+				  //setTimeout(function(){
+					  //wx.navigateTo({
+						//  url: '../index/index'
+					  //});
+				  //},800);
 				  
 			  }
-			})
+			});
+			wx.navigateTo({
+			    url: '../index/index'
+		    });
 		})
 		.catch(function(err){
 			console.info('set data failed', err.code, err);
@@ -174,19 +197,19 @@ Page({
 			"type":notes_type,
 			"author":app.globalData.userInfo.nickName,
 			"timeUpdate":util.formatTime(new Date(time_now)),
-			"title":e.detail.value.title,
-			"contents":e.detail.value.contents
+			"title":e.detail.value.title.trim(),
+			"contents":e.detail.value.contents.trim()
 		}).then(function(){
 			wx.showToast({
 			  title: '提交成功',
 			  icon: 'success',
-			  duration: 5000,
+			  duration: 800,
 			  success:function(){
 				  setTimeout(function(){
 					  wx.navigateTo({
 						  url: '../index/index'
 					  });
-				  },5000);
+				  },1000);
 				  
 			  }
 			})
@@ -196,5 +219,38 @@ Page({
 		});
 	}
 	
+	
+  },
+  checkFrom:function(data,type){
+	  if(type==="create"||type===undefined){
+		  console.log("新建笔记，数据检查");
+		  if(data.detail.value.type.trim().length===0){
+			 this.showMsg("请填写分类");
+			 console.log("err1");
+			 return;
+		  }
+	  }
+	  if(data.detail.value.title.trim().length===0){
+		 this.showMsg("请填写标题");
+		 console.log("err2");
+		 return;
+	  }
+	  if(data.detail.value.contents.trim().length===0){
+		 this.showMsg("请填写内容");
+		 console.log("err3");
+		 return;
+	  }
+	  
+	  return true;
+  },
+  showMsg:function(msg){
+	  wx.showToast({
+		  title: msg,
+		  icon: 'success',
+		  duration: 5000,
+		  success:function(){
+           
+		  }
+	  });
   }
 })

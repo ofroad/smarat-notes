@@ -10,7 +10,7 @@
   <form bindsubmit="formSubmit">
 	  <block wx:if="{{hastypes===true}}">
 		  <view class="section">
-			  <view class="section__title">选择笔记分类：</view>
+			  <view class="section_title">选择笔记分类：</view>
 			  <picker name="type" bindchange="bindPickerChange" value="{{index}}" range="{{types}}">
 				<view class="picker">
 				  当前选择：{{types[index]}}
@@ -21,9 +21,10 @@
 	  <block wx:else>
 		  <view class="section">
 			  <label>新建分类：</label>
-			  <input name="type" style="border:1px solid #ff0000;" placeholder="新建分类" auto-focus />
+			  <input name="type" style="border:1px solid #ff0000;" placeholder="新建分类" />
 		  </view>
 	  </block>
+	  
 	  <view class="section">
 		  <label>标题：</label>
 		  <input value="{{edit_title}}" name="title" style="border:1px solid #ff0000;" placeholder="标题" auto-focus />

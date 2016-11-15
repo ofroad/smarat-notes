@@ -6,7 +6,8 @@ Page({
     motto: 'Hello World',
     userInfo: {},
 	types: [],
-	types_total:[]
+	types_total:[],
+	submit_disabled:false
   },
   //事件处理函数
   viewList:function(e){
@@ -102,7 +103,11 @@ Page({
 		 
 		 
 		},this);
-	
+	    
+		//初始化提交标记
+	    this.setData({
+			submit_disabled:!this.data.submit_disabled
+		});
 	 
   },
   onReady:function(){
@@ -110,9 +115,35 @@ Page({
   },
   formSubmit: function(e) {
     console.log('form发生了submit事件，携带数据为：', e.detail.value);
+	console.log(this.data.submit_disabled);
+	//阻止多次快速重复点击提交
+	if(this.data.submit_disabled){
+		console.log("多次快速重复点击提交");
+		return;
+	}
+	this.setData({
+		submit_disabled:!this.data.submit_disabled
+	});
+	
 	var notes_type=e.detail.value.type;
 	//that.data.types.push(notes_type);
-	this.ref.child("notes-type").push(notes_type)
+	console.log(notes_type.trim());
+	console.log(notes_type.trim().length);
+	if(notes_type.trim().length<=0){
+		wx.showToast({
+		  title: '请输入分类',
+		  icon: 'success',
+		  duration: 2000,
+		  success:function(){
+			 
+		  }
+		});
+		this.setData({
+			submit_disabled:!this.data.submit_disabled
+		});
+		return;
+	}
+	this.ref.child("notes-type").push(notes_type.trim())
 	.then(function(){
 		wx.showToast({
 		  title: '提交成功',
